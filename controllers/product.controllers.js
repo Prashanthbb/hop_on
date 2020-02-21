@@ -179,3 +179,42 @@ exports.get_trip_details =function(req,res){
        })
    return true;
 }
+
+exports.ride_price = function(req,res) {
+  let price_data = {
+    authorizationToken : "cuosIaNyN460FN26WV0YVhKW7GMOVd9wLIjhiooebKs=",
+    user_id : "11714",
+    circle_id : "249",
+    carType : req.body.carType,
+    rental_type : req.body.rental_type,
+    start_city : req.body.start_city,
+    package_details : req.body.package_details
+  }
+  for (var each_data in price_data) {
+    if (price_data[each_data] === "undefined" || price_data[each_data] === "" ) {
+      res.send({
+             "response": "data missing: "+ each_data,
+             "success": "false"
+            })
+      return true;
+    }
+  }
+    request({
+      url: 'https://testapis.hopon.co.in/pricing/getpricing',
+      json: price_data,
+      headers: {
+        'x-api-key': 'MIqXWCGGEfa3aHPQgYe0I3COYaxtl1I540YCPa4n',
+        'Content-Type' : 'application/json'
+      },
+      method: 'post'
+    },function(error, response, result) {
+      console.log(response);
+      if (!error && response.statusCode == 200){
+               res.send(result);
+               // res.send(response);
+         }else{
+           console.log(error);
+         }
+       })
+   return true;
+}
